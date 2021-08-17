@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MapActivity1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right">
+        <Button
+            android:id="@+id/map1_light_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LIGHT" />
+        <Button
+            android:id="@+id/map1_mode_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MODE" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/map1_mapImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/map1"
+        />
+</LinearLayout>
