@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "187898682073",
+    "project_id": "cross-walker-watch",
+    "storage_bucket": "cross-walker-watch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187898682073:android:e2456818fffbb764827cc8",
+        "android_client_info": {
+          "package_name": "com.cwwf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187898682073-aoakme1883u1qa2dm3ev7c6jjajbpnst.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cwwf",
+            "certificate_hash": "4a24e9c799373b692a563d55ff71707bb2a86d70"
+          }
+        },
+        {
+          "client_id": "187898682073-rngk7alv86r0tg5gvigfjh5nc3vagf0o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR87LgMGxzLvi3ZjHjd6WiL4Np18UA3Yo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187898682073-rngk7alv86r0tg5gvigfjh5nc3vagf0o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "187898682073-hp6a7g0r5k2vc9ptjntjml8368mlnbgf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cwwf"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187898682073:android:60ea5f30adbbab59827cc8",
+        "android_client_info": {
+          "package_name": "com.example.ees_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187898682073-rngk7alv86r0tg5gvigfjh5nc3vagf0o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR87LgMGxzLvi3ZjHjd6WiL4Np18UA3Yo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187898682073-rngk7alv86r0tg5gvigfjh5nc3vagf0o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "187898682073-hp6a7g0r5k2vc9ptjntjml8368mlnbgf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cwwf"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
