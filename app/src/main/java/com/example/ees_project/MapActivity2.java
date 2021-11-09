@@ -47,10 +47,10 @@ import java.util.Map;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MapActivity2 extends AppCompatActivity implements View.OnClickListener, BeaconConsumer, SensorEventListener {
 
-    private String UUID = "AAAAAAAA-BBBB-BBBB-CCCC-CCCCAAAAAAAA";
-    private String UUID_2 = "AAAAAAAA-BBBB-BBBB-CCCC-CCCCAAAAAABB";
-    private String UUID_3 = "AAAAAAAA-BBBB-BBBB-CCCC-CCCCAAAAAACC";
-    private String UUID_4 = "AAAAAAAA-BBBB-BBBB-CCCC-CCCCAAAAAAFF";
+    private String UUID = "AAAAAAAA-BBBB-BBBB-CCCC-CCCCAAAAAAAA";       // 비콘 1 UUID
+    private String UUID_2 = "AAAAAAAA-BBBB-BBBB-CCCC-CCCCAAAAAABB";     // 비콘 2 UUID
+    private String UUID_3 = "AAAAAAAA-BBBB-BBBB-CCCC-CCCCAAAAAACC";     // 비콘 3 UUID
+    private String UUID_4 = "AAAAAAAA-BBBB-BBBB-CCCC-CCCCAAAAAAFF";     // 비콘 4 UUID
 
     private String TAG = MainActivity.class.getSimpleName();
     private BeaconManager beaconManager;
@@ -58,74 +58,73 @@ public class MapActivity2 extends AppCompatActivity implements View.OnClickListe
     private List<Beacon> beaconList = new ArrayList<>();
 
     //비콘 저장할 index;
-    private int beacon_1_index = 0;
+    private int beacon_1_index = 0;     // 현재 위치 <-> 비콘 거리 평균을 구하기 위한 배열 index
     private int beacon_2_index = 0;
     private int beacon_3_index = 0;
     private int beacon_4_index = 0;
 
     //비콘 좌표
-
     HashMap<Integer, double[]> beacon_location = new HashMap<>();
-    HashMap<Double, double[]> avg_location = new HashMap<>();
 
-    // 비콘 좌표 객체
+    // 비콘 좌표 객체 (x, y, distance)
     private Beacon_Location[] beacon_class = new Beacon_Location[3];
 
-    private double[] beacon_1_location = {0.0, 0.0};
-    private double[] beacon_2_location = {20.0, 20.0};
-    private double[] beacon_3_location = {40.0, 0.0};
-    private double[] beacon_4_location = {60.0, 20.0};
+    // 핑거 프린틩을 하기 위한 비콘 좌표
+    private double[] beacon_1_location = {0.0, 0.0};            // change
+    private double[] beacon_2_location = {20.0, 20.0};          // change
+    private double[] beacon_3_location = {40.0, 0.0};           // change
+    private double[] beacon_4_location = {60.0, 20.0};          // change
 
-    //불 좌표
+    // 불 좌표
     private double[] fire_location = {0.0, 20.0};
 
-    //소화기 좌표
+    // 소화기 좌표
     private  double[] water_location = {60.0, 20.0};
 
-    //출구 좌표
+    // 출구 좌표
     private double[] exit_location = {60.0, 20.0};
 
+    // 사용자 현재 위치
     private Beacon_Location user_Position;
 
-
-    //비콘 각각의 거리
+    // 사용자 <-> 비콘 각각의 거리, 평균 필터링 하기 위한 배열
     private double[] beacon_1 = new double[5];
     private double[] beacon_2 = new double[5];
     private double[] beacon_3 = new double[5];
     private double[] beacon_4 = new double[5];
 
     private Button lightBtn;
-//    private Button modeBtn;
-
     private boolean mFlashOn;
 
     private CameraManager mCameraManager;
     private String mCameraId;
 
-    //센서
-    private ImageView mPointer;
-    private ImageView mfire;
-    private ImageView mfire_ex;
-    private SensorManager mSensorManager;
-    private Sensor mAccelerometer;
-    private Sensor mMagnetometer;
-    private float[] mLastAccelerometer = new float[3];
-    private float[] mLastMagnetometer = new float[3];
-    private boolean mLastAccelerometerSet = false;
-    private boolean mLastMagnetometerSet = false;
-    private float[] mR = new float[9];
-    private float[] mOrientation = new float[3];
-    private float mCurrentDegree = 0f;
-    private float mCurrentDegree_fi = 0f;
-    private float mCurrentDegree_ex = 0f;
+    // 나침반
+    private ImageView mPointer;                         // 탈출구
+    private ImageView mfire;                            // 화재
+    private ImageView mfire_ex;                         // 소화기
 
-    //출구각도
+    // 센서
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;                      // 가속도 센서
+    private Sensor mMagnetometer;                       // 자기장 센서
+    private float[] mLastAccelerometer = new float[3];  // 가속도를 평균 필터링 하기 위한 배열
+    private float[] mLastMagnetometer = new float[3];   // 자기장을 평균 필터링 하기 위한 배열
+    private boolean mLastAccelerometerSet = false;      // 가속도 센서의 동작 여부를 체크하는 변수
+    private boolean mLastMagnetometerSet = false;       // 자기장 센서의 동작 여부를 체크하는 변수
+    private float[] mR = new float[9];                  // 회전 매트릭스
+    private float[] mOrientation = new float[3];        // 방위각
+    private float mCurrentDegree = 0f;                  // '탈출구' 나침반(화살표) 각도
+    private float mCurrentDegree_fi = 0f;               // '화재' 나침반(화살표) 각도
+    private float mCurrentDegree_ex = 0f;               // '소화기' 나침반(화살표) 각도
+
+    // 출구 각도 (0 ~ 359)
     private double exit_angle = 0.0;
 
-    //불각도
+    // 불 각도 (0 ~ 359)
     private double fire_angle = 0.0;
 
-    //소화기각도
+    // 소화기 각도 (0 ~ 359)
     private double water_angle = 0.0;
 
     @Override
@@ -147,19 +146,21 @@ public class MapActivity2 extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map2);
 
-
+        // 센서 설정 -> 센서 값 할당
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        // 객체 할당
         mPointer = (ImageView)findViewById(R.id.compass);
         mfire = (ImageView)findViewById(R.id.fire);
         mfire_ex = (ImageView)findViewById(R.id.fire_ex);
         lightBtn = (Button) findViewById(R.id.map2_light_btn);
-//        modeBtn = (Button) findViewById(R.id.map2_mode_btn);
 
+        // 리스너 설정
         lightBtn.setOnClickListener(this);
-//        modeBtn.setOnClickListener(this);
 
+        // 카메라 플래시
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
             Toast.makeText(getApplicationContext(), "There is no camera flash.\n The app will finish!", Toast.LENGTH_LONG).show();
 
@@ -196,6 +197,7 @@ public class MapActivity2 extends AppCompatActivity implements View.OnClickListe
 
         Toast.makeText(getApplicationContext(), str+"을 클릭함", Toast.LENGTH_SHORT).show();
     }
+
 
     private void delayedFinish() {
         new Handler().postDelayed(new Runnable() {
@@ -283,7 +285,6 @@ public class MapActivity2 extends AppCompatActivity implements View.OnClickListe
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-
             //비콘 확인용 해쉬맵
             beacon_location.put(0, beacon_1_location);
             beacon_location.put(1, beacon_2_location);
@@ -296,6 +297,8 @@ public class MapActivity2 extends AppCompatActivity implements View.OnClickListe
 
                 Log.i("beacon", String.valueOf(beacon.getId1()));
                 Log.i("beacon", String.valueOf(beacon.getDistance()));
+
+                // 적어놓은 UUID에 해당하는 비콘이 존재할 경우 : 현재 위치 <-> 비콘 거리를 구함
                 if (beacon.getId1().toString().equals(UUID.toLowerCase()))
                 {
                     if (beacon_1_index < 5)
@@ -338,6 +341,7 @@ public class MapActivity2 extends AppCompatActivity implements View.OnClickListe
                     beacon_4_index++;
                 }
             }
+            // 현재 위치 <-> 각 비콘 거리의 평균을 구하기 위한 배열
             double avg[] = new double[4];
 
             for (int i = 0; i < 5; i++)
@@ -356,9 +360,12 @@ public class MapActivity2 extends AppCompatActivity implements View.OnClickListe
                 Log.i("2", String.valueOf(avg[2]));
                 Log.i("3", String.valueOf(avg[3]));
             }
+
+            // 평균 구하기
             for (int i = 0; i < 4; i++)
                 avg[i] /= 5;
 
+            // 비콘이 4개 있을 경우 가장 가까운 3개만 인식하도록 함.
             double max = 0;
             int in = 0;
             int zero = 99;
@@ -377,10 +384,12 @@ public class MapActivity2 extends AppCompatActivity implements View.OnClickListe
             for (int i = 0; i < 4; i++)
             {
                 if (in != i) {
-                    beacon_class[j++] = new Beacon_Location(avg[i] * 10 * 0.7, beacon_location.get(i));
+                    beacon_class[j++] = new Beacon_Location(avg[i] * 10 * 0.7, beacon_location.get(i));     // 비콘 거리 보정하기 (실제 지도와 비콘 축적 맞추기)
                 }
             }
+            // 여기까지
 
+            // 비콘 위치를 통해 사용자 현재 좌표 구하기
             user_Position = new calculator().get_x_y(beacon_class);
 
 //            user_Position = new calculator().put_x_y();
@@ -395,15 +404,18 @@ public class MapActivity2 extends AppCompatActivity implements View.OnClickListe
 //            my_location[1] = 3 - (map_y + avg[1] + avg[0])/map_y;
 
             //atan2(y, x)
-            double up_x = user_Position.getX();
-            double up_y = user_Position.getY();
+            double up_x = user_Position.getX();         // 사용자 x 좌표 할당
+            double up_y = user_Position.getY();         // 사용자 y 좌표 할당
             Log.i("user_position_x", String.valueOf(up_x));
             Log.i("user_position_y", String.valueOf(up_y));
-            double test_x = user_Position.getY() - exit_location[1];
-            double test_y = user_Position.getX() - exit_location[0];
-            Log.i("exit_location", String.valueOf(test_y));
-            Log.i("exit_location", String.valueOf(test_x));
+//            double test_x = user_Position.getY() - exit_location[1];    // 사용자 y 좌표 - 출구 y 좌표
+////            double test_y = user_Position.getX() - exit_location[0];    // 사용자 x 좌표 - 출구 x 좌표
+////            Log.i("exit_location", String.valueOf(test_y));
+////            Log.i("exit_location", String.valueOf(test_x));
 
+            // 각도 구하기 : https://unity-programmer.tistory.com/30
+            // 라디안 : https://ko.wikipedia.org/wiki/%EB%9D%BC%EB%94%94%EC%95%88
+            // 사용자 x, y값 - 출구(or화재or소화기) x, y값 -> 라디안(각도) -> degree(각도)
             exit_angle = Math.toDegrees(Math.atan2(user_Position.getY() - exit_location[1], user_Position.getX() - exit_location[0]));
             fire_angle = Math.toDegrees(Math.atan2(user_Position.getY() - fire_location[1], user_Position.getX() - fire_location[0]));
             water_angle = Math.toDegrees(Math.atan2(user_Position.getY() - water_location[1], user_Position.getX() - water_location[0]));
@@ -426,29 +438,34 @@ public class MapActivity2 extends AppCompatActivity implements View.OnClickListe
         }
         if(mLastAccelerometerSet && mLastMagnetometerSet) {
             SensorManager.getRotationMatrix(mR, null, mLastAccelerometer, mLastMagnetometer);
-//            float a = (float) exit_angle;
-            float azimuthinDegress  = (float) ((int) ( Math.toDegrees( SensorManager.getOrientation( mR, mOrientation)[0] ) + 360 + exit_angle+70) % 360);
+
+            // 탈출구 나침반 애니메이션 적용
+            float azimuthinDegress  = (float) ((int) ( Math.toDegrees( SensorManager.getOrientation( mR, mOrientation)[0] ) + 360 + exit_angle+70) % 360);          // change  70
             RotateAnimation ra = new RotateAnimation(
                     mCurrentDegree,
                     -azimuthinDegress,
                     Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF, 0.5f
             );
-            float azimuthinDegress_fi  = (float) ((int) ( Math.toDegrees( SensorManager.getOrientation( mR, mOrientation)[0] ) + 360 + fire_angle+70) % 360);
+
+            // 화재 나침반 애니메이션 적용
+            float azimuthinDegress_fi  = (float) ((int) ( Math.toDegrees( SensorManager.getOrientation( mR, mOrientation)[0] ) + 360 + fire_angle+70) % 360);       // change  70
             RotateAnimation ra_fi = new RotateAnimation(
                     mCurrentDegree_fi,
                     -azimuthinDegress_fi,
                     Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF, 0.5f
             );
-            float azimuthinDegress_ex  = (float) ((int) ( Math.toDegrees( SensorManager.getOrientation( mR, mOrientation)[0] ) + 360 + water_angle+70) % 360);
+
+            // 소화기 나침반 애니메이션 적용
+            float azimuthinDegress_ex  = (float) ((int) ( Math.toDegrees( SensorManager.getOrientation( mR, mOrientation)[0] ) + 360 + water_angle+70) % 360);      // change 70
             RotateAnimation ra_ex = new RotateAnimation(
                     mCurrentDegree_ex,
                     -azimuthinDegress_ex,
                     Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF, 0.5f
             );
-            ra.setDuration(250);
+            ra.setDuration(250);                        //적용
             ra.setFillAfter(true);
             ra_fi.setDuration(250);
             ra_fi.setFillAfter(true);
